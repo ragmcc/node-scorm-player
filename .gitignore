@@ -2,5 +2,5 @@
 .DS_Store
 node_modules/
 scorm_packages/
-scorm/
+/scorm/
 npm-debug.log

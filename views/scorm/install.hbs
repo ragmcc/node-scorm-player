@@ -1,0 +1,45 @@
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#scorm-install-form").submit(function(e){
+            e.preventDefault();
+
+            var formData = new FormData($(this)[0]);
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: formData,
+                async: false,
+                success: function (response) {
+                    if( response.success == true ) {
+                        $('#package-name').html('View scorm package <a href="/scorm/view/' + response.package + '">' + response.package + '</a>');
+                    } else {
+                        $('#package-name').html(response.error);
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+            return false;
+        });
+    });
+</script>
+<div>
+    <a href="/">/</a><br>
+    <a href="/install">/install</a>
+</div>
+<form id="scorm-install-form" action="/scorm/install" method="POST"  enctype="multipart/form-data">
+    <h1>Scorm package install</h1>
+    <p>
+        <input type="file" name="file" />
+    </p>
+    <p>
+        <input type="submit" value="Send" />
+    </p>
+    <p id="package-name">
+
+    </p>
+</form>

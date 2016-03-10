@@ -1,0 +1,10 @@
+<script type="text/javascript">
+    var imsmanifest = {{{ imsmanifest }}};
+
+    document.addEventListener('DOMContentLoaded', function () {
+        window.API = new ScormAPI();
+        window.API.log.enable();
+
+        document.body.innerHTML += '<iframe id="scorm_object" type="text/html" style="width: 800px; height: 600px;" src="sco/{{ id }}/' + imsmanifest.resources[0].resource[0].$.href + '"></iframe>';
+    }, false);
+</script>
