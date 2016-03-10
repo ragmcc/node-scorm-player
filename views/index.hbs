@@ -1,3 +1,17 @@
 <div>
+    <h1>Scorm packages</h1>
 
+    <p>
+        <a href="/scorm/install">Install new package</a>
+    </p>
+
+    <p>
+        <ul>
+            {{#packages}}
+                <li>
+                    {{this}} <a href="/scorm/view/{{this}}">view</a> - <a href="/scorm/delete/{{this}}">delete</a>
+                </li>
+            {{/packages}}
+        </ul>
+    </p>
 </div>

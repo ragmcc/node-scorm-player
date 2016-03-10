@@ -4,8 +4,13 @@ var router = express.Router();
 var path = require('path');
 var fs = require('fs');
 var parseString = require('xml2js').parseString;
+var multiparty = require('multiparty');
+var unzip = require('unzip2');
+var uuid = require('node-uuid');
 
-/* GET home page. */
+var common = require('../classes/common');
+
+/* GET sco resources view */
 router.get('/view/sco/*', function(req, res, next) {
     var url = req.url.split('/view/sco/')[1];
     url = url.split('?')[0];
@@ -27,7 +32,7 @@ router.get('/view/sco/*', function(req, res, next) {
     }
 });
 
-/* GET home page. */
+/* GET sco view */
 router.get('/view/:id', function(req, res, next) {
     var id = (req.params.id == undefined ? false : req.params.id);
 
@@ -38,18 +43,11 @@ router.get('/view/:id', function(req, res, next) {
         parseString(imsmanifest, function (err, result) {
             if( !err ) {
                 imsmanifest = result.manifest;
-                res.render('scorm', {
+                res.render('scorm/view', {
                     title: 'Scorm - Player',
                     id: id,
                     imsmanifest: JSON.stringify(imsmanifest)
                 });
-
-                /*
-                 res.json({
-                 'success': true,
-                 'data': imsmanifest
-                 });
-                 */
             }
         });
     } else {
@@ -61,6 +59,52 @@ router.get('/view/:id', function(req, res, next) {
             }
         });
     }
+});
+
+/* GET sco install */
+router.get('/install', function(req, res, next) {
+    res.render('scorm/install', {
+        title: 'Scorm - Install'
+    });
+});
+
+/* POST sco install */
+router.post('/install', function(req, res, next) {
+    var form = new multiparty.Form();
+
+    form.parse(req, function(err, fields, files) {
+        console.log(files);
+
+        var extension = path.extname(files.file[0].path);
+
+        if( extension.toLowerCase() == ".zip" ) {
+            var id = uuid.v4();
+
+            fs.createReadStream(files.file[0].path).pipe(unzip.Extract({path: 'scorm/packages/' + id}));
+
+            res.json({
+                success: true,
+                package: id
+            });
+        } else {
+            res.json({
+                success: false,
+                error: "Incorrect file, the file maybe ZIP"
+            });
+        }
+    });
+});
+
+/* GET sco delete */
+router.get('/delete/:id', function(req, res, next) {
+    var id = (req.params.id == undefined ? false : req.params.id);
+
+    var folder = __dirname + '/../scorm/packages/' + id;
+    if (fs.existsSync(folder)) {
+        common.deleteFolderRecursive(folder);
+    }
+
+    res.redirect('/');
 });
 
 module.exports = router;
