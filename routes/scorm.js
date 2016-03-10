@@ -19,6 +19,8 @@ router.get('/view/sco/*', function(req, res, next) {
 
     console.log("Loading scorm file: " + file);
 
+    // At this point we need to check if the file is in scorm package imsmanifest as public file.
+
     if (fs.existsSync(file)) {
         res.sendFile(file);
     } else {
