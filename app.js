@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-
 /*********/
 /** App **/
 /*********/
@@ -28,20 +27,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-/*************/
-/** MongoDB **/
-/*************/
-
-/*var mongo = require('mongodb');
-var monk = require('monk');
-var db = monk('', {
-  username : '',
-  password : ''
-});*/
-db = null;
-
-
 /***************/
 /** Socket.io **/
 /***************/
@@ -55,7 +40,7 @@ var sockets = require('./sockets/sockets').load(io);
 /** Routes **/
 /************/
 
-var routes = require('./routes/routes').load(app, db);
+var routes = require('./routes/routes').load(app);
 
 
 /************/

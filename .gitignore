@@ -4,3 +4,4 @@ node_modules/
 scorm_packages/
 /scorm/
 npm-debug.log
+config.json

@@ -2,9 +2,14 @@
     var imsmanifest = {{{ imsmanifest }}};
 
     document.addEventListener('DOMContentLoaded', function () {
-        window.API = new ScormAPI();
+        window.API = new ScormAPI('{{ id }}', {
+            'request': 'socket.io', // WARNING!! the best solution is use socket.io or websockets for more speed and no data lose
+            'success': function (success) {
+                if( success == true ) {
+                    document.body.innerHTML += '<iframe id="scorm_object" type="text/html" style="width: 800px; height: 600px;" src="sco/{{ id }}/' + imsmanifest.resources[0].resource[0].$.href + '"></iframe>';
+                }
+            }
+        });
         window.API.log.enable();
-
-        document.body.innerHTML += '<iframe id="scorm_object" type="text/html" style="width: 800px; height: 600px;" src="sco/{{ id }}/' + imsmanifest.resources[0].resource[0].$.href + '"></iframe>';
     }, false);
 </script>
