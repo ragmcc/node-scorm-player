@@ -1,10 +1,12 @@
+var fs = require('fs');
+
 var scorm = {};
 
 var mdb = null;
 
 function init () {
     var config = JSON.parse(fs.readFileSync(__dirname + '/../config.json'));
-    config = JSON.stringify(strings);
+    config = JSON.stringify(config);
 
     var mongo = require('mongodb');
     var monk = require('monk');
