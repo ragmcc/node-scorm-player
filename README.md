@@ -2,7 +2,7 @@
 
 **Warning!** This project is under development and at this time can be unstable!
 
-> For use this library, use the next commands before run.
+> To use this library, use the next commands before run.
 > If you need to use a DB different that "MongoDB",
 > edit the "models/scorm.js" and run tests for security.
 > If you want to use "MongoDB", copy the "config.default.json" to
