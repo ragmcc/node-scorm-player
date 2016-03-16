@@ -25,4 +25,4 @@ $ sudo npm install
 $ npm run grunt
 ```
 
-[git-repo-url] https://github.com/Mlgarrido/node-scorm-player.git
+[git-repo-url]: https://github.com/Mlgarrido/node-scorm-player.git
