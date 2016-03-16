@@ -16,7 +16,7 @@
 This installation uses Grunt locally:
 
 ```sh
-$ git clone [git-repo-url]
+$ git clone https://github.com/Mlgarrido/node-scorm-player.git
 ```
 
 ```sh
@@ -24,5 +24,3 @@ $ cd node-scorm-player
 $ sudo npm install
 $ npm run grunt
 ```
-
-[git-repo-url]: <https://github.com/Mlgarrido/node-scorm-player.git>
