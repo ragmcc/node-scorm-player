@@ -18,7 +18,7 @@ function init () {
 };
 
 scorm.getOne = function(data) {
-    var db = (mdb == null ? init() : mdb);
+    var db = mdb === null ? init() : mdb;
     var collection = db.get('scorm_data');
 
     collection.findOne(
@@ -40,7 +40,7 @@ scorm.getOne = function(data) {
 };
 
 scorm.insert = function(data) {
-    var db = (mdb == null ? init() : mdb);
+    var db = mdb === null ? init() : mdb;
     var collection = db.get('scorm_data');
 
     collection.insert(
@@ -56,7 +56,7 @@ scorm.insert = function(data) {
 };
 
 scorm.update = function(data) {
-    var db = (mdb == null ? init() : mdb);
+    var db = mdb === null ? init() : mdb;
     var collection = db.get('scorm_data');
 
     collection.update(
@@ -65,7 +65,7 @@ scorm.update = function(data) {
             $set: data.set
         },
         {
-            'upsert': (data.upsert == true)
+            'upsert': data.upsert == true
         },
         function (e, count) {
             if (!e) {

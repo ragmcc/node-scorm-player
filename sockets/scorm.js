@@ -1,3 +1,4 @@
+/*eslint-env node*/
 var sockets = require('./sockets');
 var uuid = require('node-uuid');
 
@@ -10,7 +11,7 @@ var user_id = 1;
 scormSocket.start = function(io) {
     io.of('/scorm').on('connection', function (socket) {
         socket.emit('connected');
-
+        console.log("Server connected")
         socket.on('initialize', function(sco) {
             console.log('Initialize sco: ' + sco);
             scormModel.getOne({
@@ -112,6 +113,7 @@ scormSocket.start = function(io) {
         });
 
         socket.on('commit', function(params) {
+            console.log("server commit: ")
             var sco = params.sco;
             var session = params.session;
             var data = params.data;

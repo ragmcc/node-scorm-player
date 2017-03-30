@@ -1,12 +1,21 @@
 <script type="text/javascript">
+    console.log("Load Scorm Course")
     var imsmanifest = {{{ imsmanifest }}};
 
     document.addEventListener('DOMContentLoaded', function () {
         window.API = new ScormAPI('{{ id }}', {
             'request': 'socket.io', // WARNING!! the best solution is use socket.io or websockets for more speed and no data lose
             'success': function (success) {
+                console.log("ScormAPI success: "+success);
                 if( success == true ) {
-                    document.body.innerHTML += '<iframe id="scorm_object" type="text/html" style="width: 800px; height: 600px;" src="sco/{{ id }}/' + imsmanifest.resources[0].resource[0].$.href + '"></iframe>';
+                    var scorm_iframe = 
+                        '<iframe id="scorm_object" type="text/html" style="width: 800px; height: 600px;" src="sco/{{ id }}/' 
+                        + "index.htm" + '"></iframe>';
+                        // imsmanifest.resources[0].resource[0].$.href
+
+                    document.body.innerHTML += scorm_iframe;
+                    
+                        
                 }
             }
         });

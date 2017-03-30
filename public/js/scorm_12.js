@@ -1,3 +1,4 @@
+/*eslint-env browser */
 function ScormAPI(sco, callbacks) {
     var session = null;
     var lastError = "0";
@@ -13,7 +14,7 @@ function ScormAPI(sco, callbacks) {
 
     // Initialize
 
-    if( callbacks.request == 'socket.io' ) {
+    if( callbacks.request === 'socket.io' ) {
         loadScript('/socket.io/socket.io.js', function() {
             socket = io.connect('/scorm');
 
@@ -24,33 +25,37 @@ function ScormAPI(sco, callbacks) {
             });
 
             socket.on('initialized', function(response) {
-                if (response.success == true) {
+                if (response.success === true) {
                     session = response.session;
                     dataModel = response.data;
 
                     if (isFunction(callbacks.success)) {
                         callbacks.success(true);
+                        console.log('Initialized Ok!');
+
                     }
                 } else {
                     if (isFunction(callbacks.success)) {
                         callbacks.success(false);
+                        console.log('Initialized Nok!');
                     }
                 }
             });
 
             socket.on('commited', function(response) {
-                if( response.success == true ) {
+                if( response.success === true ) {
+                    console.log('Commited Ok!');
                     commitSuccess(response);
                 }
             });
         });
-    } else if( callbacks.request == 'ajax' ) {
+    } else if( callbacks.request === 'ajax' ) {
         ajax({
             'url': '/scorm/api/initialize/' + sco,
             'method': 'post',
             'type': 'json',
             'success': function (response) {
-                if (response.success == true) {
+                if (response.success === true) {
                     session = response.session;
                     dataModel = response.data;
 
@@ -106,7 +111,7 @@ function ScormAPI(sco, callbacks) {
             'status': 0
         };
 
-        if( callbacks.request == 'socket.io' ) {
+        if( callbacks.request === 'socket.io' ) {
             this.LMSCommit("");
         }
 
@@ -118,11 +123,11 @@ function ScormAPI(sco, callbacks) {
     var commitAttempts = 0;
     var commitMaxAttempts = 5;
     function LMSCommit(param) {
-        if( callbacks.request == 'socket.io' ) {
+        if( callbacks.request === 'socket.io' ) {
             var data = {};
 
             for( var i in dataModel ) {
-                if( dataModel[i].status == 0 ) {
+                if( dataModel[i].status === 0 ) {
                     dataModel[i].status = 2;
                     data[i] = dataModel[i];
                 }
@@ -133,7 +138,7 @@ function ScormAPI(sco, callbacks) {
                 session: session,
                 data: data
             });
-        } else if( callbacks.request == 'ajax' ) {
+        } else if( callbacks.request === 'ajax' ) {
             commitStack.push(param);
         }
 
@@ -143,19 +148,19 @@ function ScormAPI(sco, callbacks) {
     }
 
     function commitSync() {
-        if( commiting == false && commitStack.length > 0 ) {
+        if( commiting === false && commitStack.length > 0 ) {
             commiting = true;
 
             var data = {};
 
             for( var i in dataModel ) {
-                if( dataModel[i].status == 0 ) {
+                if( dataModel[i].status === 0 ) {
                     dataModel[i].status = 2;
                     data[i] = dataModel[i];
                 }
             }
 
-            if( callbacks.request == 'ajax' ) {
+            if( callbacks.request === 'ajax' ) {
                 ajax({
                     'url': '/scorm/api/commit/' + sco,
                     'method': 'post',
@@ -176,17 +181,18 @@ function ScormAPI(sco, callbacks) {
 
     function commitSuccess(response) {
         var data = {};
+        var i;
 
-        if (response.success == true) {
-            for (var i in dataModel) {
-                if (dataModel[i].status == 2) {
+        if (response.success === true) {
+            for (i in dataModel) {
+                if (dataModel[i].status === 2) {
                     dataModel[i].status = 1;
                     data[i] = dataModel[i];
                 }
             }
         } else {
-            for (var i in dataModel) {
-                if (dataModel[i].status == 2) {
+            for (i in dataModel) {
+                if (dataModel[i].status === 2) {
                     dataModel[i].status = 0;
                     data[i] = dataModel[i];
                 }
@@ -199,8 +205,9 @@ function ScormAPI(sco, callbacks) {
     }
 
     function commitError() {
+        var data = {};
         for (var i in dataModel) {
-            if (dataModel[i].status == 2) {
+            if (dataModel[i].status === 2) {
                 dataModel[i].status = 0;
                 data[i] = dataModel[i];
             }
@@ -228,36 +235,36 @@ function ScormAPI(sco, callbacks) {
         log.i("Preparing request...");
 
         // Prepare request
-        if (request.url == undefined || request.url == null) {
+        if (request.url == undefined || request.url === null) {
             if (isFunction(request.error)) {
                 log.e("URL is undefined!");
                 request.error(101, 0);
             }
         }
 
-        if (request.method == undefined || request.method == null) {
+        if (request.method == undefined || request.method === null) {
             if (isFunction(request.error)) {
                 log.e("Method is undefined!");
                 request.error(101, 0);
             }
         }
 
-        if (request.type == undefined || request.type == null) {
+        if (request.type == undefined || request.type === null) {
             if (isFunction(request.error)) {
                 log.e("Type is undefined!");
                 request.error(101, 0);
             }
         }
 
-        if (request.async == undefined || request.type == null) {
+        if (request.async == undefined || request.type === null) {
             request.async = true;
         }
 
-        if( request.async != true && request.async != false ) {
+        if( request.async !== true && request.async !== false ) {
             request.async = true;
         }
 
-        if( request.async == false ) {
+        if( request.async === false ) {
             // Perfor sync request
             log.i("Sending sync request...");
 
@@ -265,14 +272,14 @@ function ScormAPI(sco, callbacks) {
                 var xhr = new XMLHttpRequest();
 
                 xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
                         var response = xhr.responseText;
 
-                        if (request.type.toLowerCase() == 'json') {
+                        if (request.type.toLowerCase() === 'json') {
                             response = JSON.parse(response);
 
-                            if (response.success != undefined && response.success != null) {
-                                if (response.success == true) {
+                            if (response.success != undefined && response.success !== null) {
+                                if (response.success === true) {
                                     log.s(JSON.stringify(response));
                                 } else {
                                     log.e(JSON.stringify(response));
@@ -285,7 +292,7 @@ function ScormAPI(sco, callbacks) {
                         }
 
                         resolve(response);
-                    } else if (xhr.readyState == 4) {
+                    } else if (xhr.readyState === 4) {
                         log.e("Code: " + 101);
                         log.e("XHR response: " + xhr.status);
 
@@ -299,13 +306,13 @@ function ScormAPI(sco, callbacks) {
 
                 xhr.open(request.method, request.url, true);
 
-                if (request.type.toLowerCase() == 'json') {
+                if (request.type.toLowerCase() === 'json') {
                     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                } else if(request.method.toLowerCase() == 'post') {
+                } else if(request.method.toLowerCase() === 'post') {
                     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 }
 
-                if (request.data != undefined && request.data != null) {
+                if (request.data != undefined && request.data !== null) {
                     xhr.send(request.data);
                 } else {
                     xhr.send();
@@ -318,14 +325,14 @@ function ScormAPI(sco, callbacks) {
             var xhr = new XMLHttpRequest();
 
             xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
+                if (xhr.readyState === 4 && xhr.status === 200) {
                     var response = xhr.responseText;
 
-                    if (request.type.toLowerCase() == 'json') {
+                    if (request.type.toLowerCase() === 'json') {
                         response = JSON.parse(response);
 
-                        if (response.success != undefined && response.success != null) {
-                            if (response.success == true) {
+                        if (response.success != undefined && response.success !== null) {
+                            if (response.success === true) {
                                 log.s(JSON.stringify(response));
                             } else {
                                 log.e(JSON.stringify(response));
@@ -340,7 +347,7 @@ function ScormAPI(sco, callbacks) {
                     if (isFunction(request.success)) {
                         request.success(response);
                     }
-                } else if (xhr.readyState == 4) {
+                } else if (xhr.readyState === 4) {
                     log.e("Code: " + 101);
                     log.e("XHR response: " + xhr.status);
 
@@ -354,11 +361,11 @@ function ScormAPI(sco, callbacks) {
 
             xhr.open(request.method, request.url, true);
 
-            if (request.type.toLowerCase() == 'json') {
+            if (request.type.toLowerCase() === 'json') {
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             }
 
-            if (request.data != undefined && request.data != null) {
+            if (request.data != undefined && request.data !== null) {
                 xhr.send(request.data);
             } else {
                 xhr.send();
@@ -400,19 +407,19 @@ function ScormAPI(sco, callbacks) {
         }
 
         function i(text) {
-            if( enabled == true ) {
+            if( enabled === true ) {
                 console.log("%c SCORM API: info { " + text + " }", "background-color: rgba(67, 110 238, 0.2); color: #436EEE");
             }
         }
 
         function s(text) {
-            if( enabled == true ) {
+            if( enabled === true ) {
                 console.log("%c SCORM API: success { " + text + " }", "background-color: rgba(168, 219, 168, 0.2); color: #79BD9A");
             }
         }
 
         function e(text) {
-            if( enabled == true ) {
+            if( enabled === true ) {
                 console.log("%c SCORM API: error { " + text + " }", "background-color: rgba(255, 0, 51, 0.1); color: #ff0033");
             }
         }
